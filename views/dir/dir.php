@@ -1,5 +1,7 @@
 <?php
-  $this->title = 'My Dir';
+
+/* @var $arDirAll[]  */
+/* @var $arDirInfo[]  */
 
 use yii\helpers\Url;
 
