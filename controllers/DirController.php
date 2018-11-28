@@ -7,16 +7,20 @@ use app\models\Dir;
 
 class DirController extends Controller
 {
+    /**
+     * Main action.
+     * @param string $dir_path the input path.
+     * @return Response
+     */
+    public function actionIndex($dir_path = '.')
+    {
+        $model = new Dir();
 
-  public function actionIndex($dir_path = '.')
-  {
-    $model = new Dir();
+        $model->setPath($dir_path);
 
-    $model->set_path($dir_path);
-
-    return $this->render('dir',[
-      'dir_all'=>$model->dir_all(),
-      'dir_stat'=>$model->dir_stat()
-    ]);
-  }
+        return $this->render('dir',[
+            'arDirAll'=>$model->getDirAll(),
+            'arDirInfo'=>$model->getDirInfo()
+        ]);
+    }
 }

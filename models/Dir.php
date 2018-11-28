@@ -1,5 +1,4 @@
 <?php
-
 namespace app\models;
 
 use yii\base\Model;
@@ -8,50 +7,61 @@ class Dir extends Model
 {
     private $dir_path = ".";
 
-    // основная рекурсивная функция
-    private function get_dir(string $path)
+    /**
+     * Main recursion function
+     * @param string $path the input path.
+     * @return array the full path all files & dir in path.
+     */
+    private function getDir(string $path)
     {
-      $arr_out = [];
-      if (!is_dir($path)) return $arr_out;
+        $arDir = [];
+        if (!is_dir($path)) return $arDir;
 
-      foreach (array_diff(scandir($path),[".",".."]) as $val) {
-        $full_path = $path."/". $val;
+        foreach (array_diff (scandir($path) , [".",".."]) as $value) {
+            $strFullPath = $path."/". $value;
 
-        if (is_dir($full_path)) {
-          $arr_out = array_merge ($this->get_dir ($full_path), $arr_out);;
-          array_unshift($arr_out, $full_path);
-
-        } else {
-          $arr_out[]=$full_path;
+            if (is_dir ($strFullPath) ) {
+                $arDir = array_merge ($this->getDir ($strFullPath), $arDir);;
+                array_unshift($arDir, $strFullPath);
+            } else {
+                $arDir[] = $strFullPath;
+            }
         }
-      }
-      return $arr_out;
+        return $arDir;
     }
 
-    //устанавливаем существующий путь
-    public function set_path($path)
+    /**
+     * Set $this->dir_path
+     * @param string $path the input path.
+     */
+    public function setPath($path)
     {
-      if (!file_exists($path)) {
-        $this->dir_path = ".";
-      } else {
-        $this->dir_path = $path;
-      }
+        if (!file_exists($path)) {
+            $this->dir_path = ".";
+        } else {
+            $this->dir_path = $path;
+        }
     }
 
-    //возращяет массив файлов и каталогов с вложениями
-    public function dir_all()
+    /**
+     * @return array the full path all files & dir's in $this->dir_path.
+     */
+    public function getDirAll()
     {
-      return $this->get_dir($this->dir_path);
+        return $this->getDir($this->dir_path);
     }
 
-    // возращяет информацию по выбраному элементу
-    public function dir_stat()
+    /**
+     * @return array info of $this->dir_path.
+     */
+    public function getDirInfo()
     {
-      $dir_stat[0] = $this->dir_path;
-      if($this->dir_path != ".") {
-        $dir_stat[1] = is_dir($this->dir_path);
-        $dir_stat[2] = stat($this->dir_path);
-      }
-      return $dir_stat;
+        $arDirInfo[0] = $this->dir_path;
+        if($this->dir_path != ".") {
+            $arDirInfo[1] = is_dir($this->dir_path);
+            $arDirInfo[2] = stat($this->dir_path);
+        }
+        return $arDirInfo;
     }
+
 }
