@@ -5,7 +5,11 @@ use yii\base\Model;
 
 class Dir extends Model
 {
-    private $dir_path = ".";
+    private $dir_path;
+
+    function __construct($path = ".") {
+        $this->setPath($path);
+    }
 
     /**
      * Main recursion function
