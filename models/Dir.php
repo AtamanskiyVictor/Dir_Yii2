@@ -2,10 +2,12 @@
 namespace app\models;
 
 use yii\base\Model;
+use yii\data\ArrayDataProvider;
 
 class Dir extends Model
 {
-    private $dir_path;
+    private $strPath;
+    private $intId;
 
     function __construct($path = ".") {
         $this->setPath($path);
@@ -14,56 +16,77 @@ class Dir extends Model
     /**
      * Main recursion function
      * @param string $path the input path.
+     * @param int $parentId Id of parent dir.
      * @return array the full path all files & dir in path.
      */
-    private function getDir(string $path)
+    private function getDir(string $path, $parentId)
     {
         $arDir = [];
         if (!is_dir($path)) return $arDir;
 
         foreach (array_diff (scandir($path) , [".",".."]) as $value) {
-            $strFullPath = $path."/". $value;
+            $strFullPath = $path ."/". $value;
+
+            $this->intId++;
+            $row = [
+                'id'=>$this->intId,
+                'parentId'=>$parentId,
+                'path'=>$strFullPath,
+                'title'=>'<a href="' . yii\helpers\Url::to(['dir/index', 'dir_path' => $strFullPath]) . "\" target='_blank'>".$value."</a>"];
 
             if (is_dir ($strFullPath) ) {
-                $arDir = array_merge ($this->getDir ($strFullPath), $arDir);;
-                array_unshift($arDir, $strFullPath);
+                /*$arDir = array_merge ($this->getDir ($strFullPath, $this->intId), $arDir);
+                array_unshift($arDir, $row);
+                */
+                $arDir[] = $row + ['folder'=>'true', 'children' => $this->getDir ($strFullPath, $this->intId)];
             } else {
-                $arDir[] = $strFullPath;
+                $arDir[] = $row;
             }
         }
         return $arDir;
     }
 
     /**
-     * Set $this->dir_path
+     * Set $this->strPath
      * @param string $path the input path.
      */
     public function setPath($path)
     {
-        if (!file_exists($path)) {
-            $this->dir_path = ".";
-        } else {
-            $this->dir_path = $path;
-        }
+        $this->strPath = file_exists($path) ? $path : "." ;
     }
 
+
     /**
-     * @return array the full path all files & dir's in $this->dir_path.
+     * @return array the full path all files & dir's in $this->strPath.
      */
     public function getDirAll()
     {
-        return $this->getDir($this->dir_path);
+        $this->intId = 1;
+        return $this->getDir($this->strPath, 1);
     }
 
+
     /**
-     * @return array info of $this->dir_path.
+     * @return array the full path all files as arrayDataProvider
+     */
+    public function getDirDP()
+    {
+        return new ArrayDataProvider([
+            'allModels'=>$this->getDirAll($this->strPath),
+            'pagination' => false
+        ]);
+    }
+
+
+    /**
+     * @return array info of $this->strPath.
      */
     public function getDirInfo()
     {
-        $arDirInfo[0] = $this->dir_path;
-        if($this->dir_path != ".") {
-            $arDirInfo[1] = is_dir($this->dir_path);
-            $arDirInfo[2] = stat($this->dir_path);
+        $arDirInfo[0] = $this->strPath;
+        if($this->strPath != ".") {
+            $arDirInfo[1] = is_dir($this->strPath);
+            $arDirInfo[2] = stat($this->strPath);
         }
         return $arDirInfo;
     }

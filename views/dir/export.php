@@ -6,15 +6,16 @@
 
 include("ex_header.inc");
 
-$n = 0;
 foreach($arr as $value)
 {
-    $n++;
     echo "<tr height=17 style='height:12.75pt'>";
-    echo "<td class=xl28 align=left>$n</td>";
-   	echo "<td class=xl28 align=left>$value</td>";
-   	echo "<td class=xl28 align=left></td>";
-  	echo "</tr>";
+
+    foreach($value as $val)
+        {
+            if (!is_array($val)) echo "<td class=xl28 align=left>", $val, "</td>";
+        }
+
+    echo "</tr>";
 }
 
 include("ex_footer.inc");

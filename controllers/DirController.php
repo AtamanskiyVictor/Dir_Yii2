@@ -18,7 +18,8 @@ class DirController extends Controller
 
         return $this->render('dir',[
             'arDirAll'=>$model->getDirAll(),
-            'arDirInfo'=>$model->getDirInfo()
+            'arDirInfo'=>$model->getDirInfo(),
+            'dataProvider'=>$model->getDirDP()
         ]);
     }
 
