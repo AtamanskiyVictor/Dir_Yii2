@@ -3,6 +3,7 @@ namespace app\models;
 
 use yii\base\Model;
 use yii\data\ArrayDataProvider;
+use yii\helpers\Url;
 
 class Dir extends Model
 {
@@ -32,7 +33,8 @@ class Dir extends Model
                 'id'=>$this->intId,
                 'parentId'=>$parentId,
                 'path'=>$strFullPath,
-                'title'=>'<a href="' . yii\helpers\Url::to(['dir/index', 'dir_path' => $strFullPath]) . "\" target='_blank'>".$value."</a>"];
+                //'title'=>$value;
+                'title'=>'<a href="' . Url::to(['dir/index', 'dir_path' => $strFullPath]) . "\" target='_blank'>".$value."</a>"];
 
             if (is_dir ($strFullPath) ) {
                 /*$arDir = array_merge ($this->getDir ($strFullPath, $this->intId), $arDir);
