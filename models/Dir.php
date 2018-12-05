@@ -20,7 +20,7 @@ class Dir extends Model
      * @param int $parentId Id of parent dir.
      * @return array the full path all files & dir in path.
      */
-    private function getDir(string $path, $parentId)
+    private function getDir($path, $parentId)
     {
         $arDir = [];
         if (!is_dir($path)) return $arDir;
