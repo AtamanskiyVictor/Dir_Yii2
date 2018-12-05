@@ -4,6 +4,7 @@ namespace app\models;
 use yii\base\Model;
 use yii\data\ArrayDataProvider;
 use yii\helpers\Url;
+use Yii;
 
 class Dir extends Model
 {
@@ -64,7 +65,14 @@ class Dir extends Model
     public function getDirAll()
     {
         $this->intId = 1;
-        return $this->getDir($this->strPath, 1);
+		
+		//$data =  $this->getDir($this->strPath, 1);
+		$data = Yii::$app->cache->getOrSet($key, function () {
+            return $this->getDir($this->strPath, 1);
+    		},15
+    		);
+
+        return $data;
     }
 
 

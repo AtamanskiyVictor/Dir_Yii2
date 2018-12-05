@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use yii\web\Controller;
 use app\models\Dir;
+use Yii;
 
 class DirController extends Controller
 {
@@ -14,6 +15,8 @@ class DirController extends Controller
      */
     public function actionIndex($dir_path = '.')
     {
+        Yii::$app->params['MyVar'] = microtime(true);
+        
         $model = new Dir($dir_path);
 
         return $this->render('dir',[

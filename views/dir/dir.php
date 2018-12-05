@@ -53,6 +53,6 @@ $this->title = 'My Dir';
         echo '<a href="', Url::to(['dir/index', 'dir_path' => $value['path']]), '" target="_blank">';
         echo $value['path'], '</a><br>', PHP_EOL;
     }*/
-
+    echo 'Время выполнения скрипта: '.(microtime(true) - Yii::$app->params['MyVar']).' сек.';
 ?>
 </div>
