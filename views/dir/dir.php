@@ -5,7 +5,7 @@
 
 use yii\helpers\Url;
 
-$this->title = 'My Dir';
+$this->title = 'My Dir (phpStorm)';
 
 ?>
 
